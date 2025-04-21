@@ -1,11 +1,11 @@
-#game-container {
-    height: 100vh;
-    width: 100vw;
+#door-container {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    position: relative; /* ← very important */
   }
+  
+  /* Keep door centered in container */
   #door {
     width: 200px;
     height: 400px;
@@ -13,10 +13,10 @@
     border: 6px solid #5c3317;
     border-radius: 8px;
     position: relative;
-    z-index: 10;
     cursor: grab;
-    transition: transform 0.3s ease;
+    z-index: 5;
   }
+  
   #knob {
     width: 20px;
     height: 20px;
@@ -26,23 +26,21 @@
     right: 20px;
     top: 50%;
     transform: translateY(-50%);
-    z-index: 11;
   }
   
-  .popup {
+  /* This wrapper positions the popups relative to the door */
+  .popup-wrapper {
     position: absolute;
-    top: 50%;
+    bottom: 100%; /* ⬆️ place it above the door */
     left: 50%;
-    transform: translate(-50%, -50%);
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    transform: translateX(-50%) translateY(-20px); /* shift up 20px for margin */
     z-index: 100;
-    min-width: 500px;
-    text-align: center;
   }
-  /* 🔁 Knock shake animation */
+  
+  #door:active {
+    cursor: grabbing;
+  }
+  
   @keyframes shake {
     0% { transform: rotate(0); }
     20% { transform: rotate(2deg); }
@@ -52,6 +50,7 @@
     100% { transform: rotate(0); }
   }
   
-  #door.knocking {
+  .knocking {
     animation: shake 0.5s ease-in-out;
   }
+  

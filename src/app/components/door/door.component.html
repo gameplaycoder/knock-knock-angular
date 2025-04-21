@@ -1,0 +1,9 @@
+<div id="door-container">
+    <div id="door" (click)="onClick()" [class.knocking]="isKnocking">
+      <div id="knob"></div>
+    </div>
+  
+    <div class="popup-wrapper">
+      <ng-content></ng-content> <!-- popups render here -->
+    </div>
+  </div>

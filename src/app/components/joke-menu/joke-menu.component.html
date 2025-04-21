@@ -1,0 +1,7 @@
+<div class="popup">
+    <h2>Who's there?</h2>
+    <button *ngFor="let joke of jokes" (click)="onSelect(joke)">
+      {{ joke.name }}
+    </button>
+  </div>
+  

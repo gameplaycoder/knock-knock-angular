@@ -1,0 +1,33 @@
+.popup {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    min-width: 300px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    text-align: center;
+  }
+  
+  .popup h2 {
+    color: orange;
+    font-size: 22px;
+    margin-bottom: 12px;
+  }
+  
+  .popup p {
+    font-size: 18px;
+    color: #333;
+  }
+  
+  @keyframes wobble {
+    0%, 100% { transform: rotate(0deg); }
+    20% { transform: rotate(3deg); }
+    40% { transform: rotate(-3deg); }
+    60% { transform: rotate(2deg); }
+    80% { transform: rotate(-2deg); }
+  }
+  
+  .popup h2 {
+    animation: wobble 1.5s ease-in-out infinite;
+  }
+
+  
