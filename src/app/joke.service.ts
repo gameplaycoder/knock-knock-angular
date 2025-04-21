@@ -108,8 +108,23 @@ export class JokeService {
     }
   ];
 
-  getRandomJokes(count: number = 3): Joke[] {
-    return [...this.jokes].sort(() => 0.5 - Math.random()).slice(0, count);
+  private localKey = 'shownJokes';
+
+  getShownJokes(): string[] {
+    const stored = localStorage.getItem(this.localKey);
+    return stored ? JSON.parse(stored) : [];
+  }
+
+  addShownJoke(name: string) {
+    const shown = this.getShownJokes();
+    if (!shown.includes(name)) {
+      shown.push(name);
+      localStorage.setItem(this.localKey, JSON.stringify(shown));
+    }
+  }
+
+  resetShownJokes() {
+    localStorage.removeItem(this.localKey);
   }
 
   getQuestion(joke: Joke): string {
@@ -123,5 +138,20 @@ export class JokeService {
         ? joke.question
         : `${joke.name} who?`;
     }
+  }
+
+  getRandomJokes(count: number = 3): Joke[] {
+    const shown = this.getShownJokes();
+    const available = this.jokes.filter(joke => !shown.includes(joke.name));
+
+    // If we’ve run out, reset the list
+    if (available.length < count) {
+      this.resetShownJokes();
+      return this.getRandomJokes(count); // try again after reset
+    }
+
+    return [...available]
+      .sort(() => 0.5 - Math.random())
+      .slice(0, count);
   }
 }

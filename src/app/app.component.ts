@@ -16,7 +16,7 @@ enum GameState {
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  GameState = GameState; // expose enum to template
+  GameState = GameState;
   gameState: GameState = GameState.Idle;
 
   jokes: Joke[] = [];
@@ -33,21 +33,54 @@ export class AppComponent implements OnInit {
   laughSound = new Audio('assets/laugh.mp3');
   knockSound = new Audio('assets/knock.mp3');
 
+  selectedVoiceQuestion: SpeechSynthesisVoice | null = null;
+  selectedVoicePunchline: SpeechSynthesisVoice | null = null;
+
   constructor(
     public jokeService: JokeService,
     private confettiService: ConfettiService
   ) {}
 
   ngOnInit() {
-    // Preload sounds
+    this.preloadSounds();
+    this.loadVoices();
+  }
+
+  preloadSounds() {
     this.fartSound.load();
     this.tadaSound.load();
     this.laughSound.load();
     this.knockSound.load();
   }
 
+  loadVoices() {
+    const tryVoices = () => {
+      const voices = speechSynthesis.getVoices();
+      if (voices.length) {
+        // Try to pick different voices for variety
+        const enVoices = voices.filter(v => v.lang.startsWith('en'));
+  
+        this.selectedVoiceQuestion =
+          enVoices.find(v => v.lang === 'en-GB') || enVoices[0];
+  
+        this.selectedVoicePunchline =
+          enVoices.find(v => v.name.includes('Google UK English Female') || v.name.includes('Fred')) ||
+          enVoices.find(v => v !== this.selectedVoiceQuestion) ||
+          enVoices[1];
+  
+        console.log('📢 Voices loaded:', {
+          question: this.selectedVoiceQuestion?.name,
+          punchline: this.selectedVoicePunchline?.name
+        });
+      } else {
+        setTimeout(tryVoices, 100);
+      }
+    };
+  
+    tryVoices();
+  }
+
   knock() {
-    // Only allow knock from Idle or Punchline state
     if (this.gameState === GameState.Menu || this.gameState === GameState.Question) return;
 
     this.playAudio(this.knockSound);
@@ -62,8 +95,9 @@ export class AppComponent implements OnInit {
 
   chooseJoke(joke: Joke) {
     this.currentJoke = joke;
+    this.jokeService.addShownJoke(joke.name);
     this.questionText = this.jokeService.getQuestion(joke);
-    this.speak(this.questionText);
+    this.speak(this.questionText, this.selectedVoiceQuestion);
     this.gameState = GameState.Question;
   }
 
@@ -71,7 +105,7 @@ export class AppComponent implements OnInit {
     if (!this.currentJoke) return;
 
     this.punchlineText = this.currentJoke.punchline;
-    this.speak(this.punchlineText);
+    this.speak(this.punchlineText, this.selectedVoicePunchline);
 
     this.playAudio(this.tadaSound);
     setTimeout(() => {
@@ -92,12 +126,18 @@ export class AppComponent implements OnInit {
     sound.play();
   }
 
-  speak(text: string) {
+  speak(text: string, voice: SpeechSynthesisVoice | null = null) {
     if ('speechSynthesis' in window) {
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'en-US';
-      utterance.rate = 1;
-      window.speechSynthesis.speak(utterance);
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.voice = voice || null;
+      utter.lang = voice?.lang || 'en-US';
+      utter.rate = 1;
+      window.speechSynthesis.speak(utter);
     }
+  }
+
+  resetJokeHistory() {
+    this.jokeService.resetShownJokes();
+    console.log('🔄 Joke history reset.');
   }
 }
