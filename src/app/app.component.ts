@@ -16,6 +16,7 @@ enum GameState {
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
+  title: string = 'knock-knock-game';
   GameState = GameState;
   gameState: GameState = GameState.Idle;
 
