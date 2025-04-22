@@ -14,7 +14,7 @@
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "outputPath": "dist/knock-knock-game",
-            "baseHref": "https://gameplaycoder.github.io/knock-knock-angular/",
+            "baseHref": "/knock-knock-angular/",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": [
