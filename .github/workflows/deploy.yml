@@ -28,3 +28,4 @@ jobs:
     - name: 🚀 Deploy to GitHub Pages
   run: |
     npx angular-cli-ghpages --dir=dist/knock-knock-game --repo=https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }} --name="github-actions[bot]" --email="github-actions[bot]@users.noreply.github.com"
+
