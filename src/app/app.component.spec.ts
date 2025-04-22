@@ -1,9 +1,19 @@
 import { TestBed } from '@angular/core/testing';
 import { AppComponent } from './app.component';
+import { DoorComponent } from './components/door/door.component';
+import { JokeMenuComponent } from './components/joke-menu/joke-menu.component';
+import { JokeQuestionComponent } from './components/joke-question/joke-question.component';
+import { JokePunchlineComponent } from './components/joke-punchline/joke-punchline.component';
+
 
 describe('AppComponent', () => {
   beforeEach(() => TestBed.configureTestingModule({
-    declarations: [AppComponent]
+    declarations: [      
+      AppComponent,
+      DoorComponent,
+      JokeMenuComponent,
+      JokeQuestionComponent,
+      JokePunchlineComponent]
   }));
 
   it('should create the app', () => {
@@ -18,10 +28,4 @@ describe('AppComponent', () => {
     expect(app.title).toEqual('knock-knock-game');
   });
 
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.content span')?.textContent).toContain('knock-knock-game app is running!');
-  });
 });
